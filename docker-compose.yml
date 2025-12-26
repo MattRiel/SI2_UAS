@@ -1,0 +1,96 @@
+services:
+  # PHP-FPM Service (Laravel API)
+  api:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: si2_api
+    restart: unless-stopped
+    working_dir: /var/www/api
+    volumes:
+      - ./api:/var/www/api
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - si2_network
+    depends_on:
+      - db
+      - redis
+
+  # Next.js Service (Frontend)
+  web:
+    build:
+      context: .
+      dockerfile: docker/node/Dockerfile
+    container_name: si2_web
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ./web:/app
+    ports:
+      - "3000:3000"
+    networks:
+      - si2_network
+
+  # Nginx Service
+  nginx:
+    image: nginx:stable-alpine
+    container_name: si2_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./api:/var/www/api
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - si2_network
+    depends_on:
+      - api
+      - web
+
+  # Database Service (MariaDB)
+  db:
+    image: mariadb:10.11
+    container_name: si2_db
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${DB_DATABASE:-si2_uas}
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD:-rootpassword}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./legacy/si2_uas.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - si2_network
+
+  # Cache Service (Redis)
+  redis:
+    image: redis:alpine
+    container_name: si2_redis
+    restart: unless-stopped
+    networks:
+      - si2_network
+
+  # Object Storage (MinIO)
+  minio:
+    image: minio/minio
+    container_name: si2_minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-admin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-password}
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - si2_network
+
+networks:
+  si2_network:
+    driver: bridge
+
+volumes:
+  db_data:
+  minio_data:

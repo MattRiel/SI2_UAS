@@ -1,32 +1,49 @@
-.DS_Store
-
-application/cache/*
-!application/cache/index.html
-
-application/logs/*
-!application/logs/index.html
-
-!application/*/.htaccess
-
-composer.lock
-tests/mocks/database/ci_test.sqlite
-
-user_guide_src/build/*
-user_guide_src/cilexer/build/*
-user_guide_src/cilexer/dist/*
-user_guide_src/cilexer/pycilexer.egg-info/*
-/vendor/
-
 # IDE Files
-#-------------------------
-/nbproject/
-.idea/*
+.idea/
+.vscode/
+*.swp
+*.swo
 
-## Sublime Text cache files
-*.tmlanguage.cache
-*.tmPreferences.cache
-*.stTheme.cache
-*.sublime-workspace
-*.sublime-project
-/tests/tests/
-/tests/results/
+# OS Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Project Root
+.env
+.env.docker
+docker-compose.override.yml
+
+# Backend (Laravel)
+api/vendor/
+api/.env
+api/.env.backup
+api/storage/*.key
+api/storage/framework/cache/data/*
+api/storage/framework/sessions/*
+api/storage/framework/testing/*
+api/storage/framework/views/*
+api/storage/logs/*.log
+api/public/storage
+api/public/hot
+api/public/build
+api/phpunit.result.cache
+
+# Frontend (Next.js)
+web/node_modules/
+web/.next/
+web/out/
+web/build/
+web/.env*.local
+web/.env
+web/npm-debug.log*
+web/yarn-debug.log*
+web/yarn-error.log*
+web/.pnp*
+web/.vercel
+
+# Legacy
+legacy/**/cache/*
+legacy/**/logs/*
+!legacy/**/cache/index.html
+!legacy/**/logs/index.html
