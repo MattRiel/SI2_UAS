@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import axios from "axios";
+import api from "../../lib/api";
 import { useRouter } from "next/navigation";
 import { LucideLock, LucideUser, LucideLoader2, LucideAlertCircle } from "lucide-react";
 
@@ -18,7 +18,7 @@ export default function LoginPage() {
         setError("");
 
         try {
-            const res = await axios.post("http://localhost/api/login", { username, password });
+            const res = await api.post("/login", { username, password });
             localStorage.setItem("token", res.data.access_token);
             localStorage.setItem("user", JSON.stringify(res.data.user));
             router.push("/");

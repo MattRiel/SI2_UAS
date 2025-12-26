@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axios from "axios";
-import BookCard from "@/components/BookCard";
-import BookModal from "@/components/BookModal";
+import api from "../../lib/api";
+import BookCard from "../../components/BookCard";
+import BookModal from "../../components/BookModal";
 import { LucidePlus, LucideLoader2 } from "lucide-react";
 
 interface Book {
@@ -21,7 +21,7 @@ export default function BooksPage() {
     const fetchBooks = async () => {
         setLoading(true);
         try {
-            const res = await axios.get("http://localhost/api/books");
+            const res = await api.get("/books");
             setBooks(res.data);
         } catch (err) {
             console.error(err);
@@ -36,7 +36,7 @@ export default function BooksPage() {
 
     const handleAdd = async (data: any) => {
         try {
-            await axios.post("http://localhost/api/books", data);
+            await api.post("/books", data);
             console.log("Book added successfully!"); // Mock toast
             setModalOpen(false);
             fetchBooks();
@@ -48,7 +48,7 @@ export default function BooksPage() {
     const handleUpdate = async (data: any) => {
         if (!editingBook) return;
         try {
-            await axios.put(`http://localhost/api/books/${editingBook.id}`, data);
+            await api.put(`/books/${editingBook.id}`, data);
             console.log("Book updated successfully!"); // Mock toast
             setModalOpen(false);
             setEditingBook(null);
@@ -61,7 +61,7 @@ export default function BooksPage() {
     const handleDelete = async (id: number) => {
         if (confirm("Are you sure you want to delete this book?")) {
             try {
-                await axios.delete(`http://localhost/api/books/${id}`);
+                await api.delete(`/books/${id}`);
                 console.log("Book deleted successfully!"); // Mock toast
                 fetchBooks();
             } catch (err) {

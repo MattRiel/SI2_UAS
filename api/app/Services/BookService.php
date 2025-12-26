@@ -3,27 +3,34 @@
 namespace App\Services;
 
 use App\Models\Book;
+use App\Repositories\BookRepository;
 
 class BookService
 {
+    protected $bookRepository;
+
+    public function __construct(BookRepository $bookRepository)
+    {
+        $this->bookRepository = $bookRepository;
+    }
+
     public function getAllBooks()
     {
-        return Book::all();
+        return $this->bookRepository->all();
     }
 
     public function createBook(array $data)
     {
-        return Book::create($data);
+        return $this->bookRepository->create($data);
     }
 
     public function updateBook(Book $book, array $data)
     {
-        $book->update($data);
-        return $book;
+        return $this->bookRepository->update($book, $data);
     }
 
     public function deleteBook(Book $book)
     {
-        return $book->delete();
+        return $this->bookRepository->delete($book);
     }
 }

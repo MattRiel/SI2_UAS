@@ -21,6 +21,8 @@ class Image extends Model
 
     public function getUrlAttribute()
     {
-        return Storage::disk('s3')->url($this->filename);
+        /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+        $disk = Storage::disk('s3');
+        return $disk->url($this->filename);
     }
 }

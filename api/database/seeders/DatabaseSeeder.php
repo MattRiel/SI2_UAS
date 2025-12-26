@@ -13,8 +13,8 @@ class DatabaseSeeder extends Seeder
     {
         // Default Admins from si2_uas.sql
         $admins = [
-            ['username' => 'ariel', 'password' => 'ariel123'], // Adjusted passwords for demo
-            ['username' => 'traxforce', 'password' => 'password123'],
+            ['username' => 'ariel', 'password' => 'password'],
+            ['username' => 'traxforce', 'password' => 'password'],
         ];
 
         foreach ($admins as $admin) {
@@ -29,8 +29,8 @@ class DatabaseSeeder extends Seeder
 
         // Default Guests
         $guests = [
-            ['username' => 'roberto', 'password' => 'guest123'],
-            ['username' => 'anto', 'password' => 'guest123'],
+            ['username' => 'roberto', 'password' => 'password'],
+            ['username' => 'anto', 'password' => 'password'],
         ];
 
         foreach ($guests as $guest) {

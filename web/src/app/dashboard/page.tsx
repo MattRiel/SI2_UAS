@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../lib/api";
 import { LucideBook, LucideImage, LucideUsers, LucideArrowUpRight, LucideClock, LucideLoader2 } from "lucide-react";
 
 interface Stats {
@@ -15,18 +15,10 @@ export default function DashboardPage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // In a real app, we'd have a summary endpoint. For now, fetch separately.
         const fetchData = async () => {
             try {
-                const [booksRes, imagesRes] = await Promise.all([
-                    axios.get("http://localhost/api/books"),
-                    axios.get("http://localhost/api/images")
-                ]);
-                setStats({
-                    books: booksRes.data.length,
-                    images: imagesRes.data.length,
-                    users: 2, // Mock for now
-                });
+                const res = await api.get("/stats");
+                setStats(res.data);
             } catch (err) {
                 console.error("Failed to fetch dashboard stats", err);
             } finally {
