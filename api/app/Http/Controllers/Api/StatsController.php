@@ -8,14 +8,20 @@ use App\Models\Image;
 use App\Models\User;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Cache;
+
 class StatsController extends Controller
 {
     public function index()
     {
-        return response()->json([
-            'books' => Book::count(),
-            'images' => Image::count(),
-            'users' => User::count(),
-        ]);
+        $stats = Cache::remember('dashboard_stats', 60, function () {
+            return [
+                'books' => Book::count(),
+                'images' => Image::count(),
+                'users' => User::count(),
+            ];
+        });
+
+        return response()->json($stats);
     }
 }

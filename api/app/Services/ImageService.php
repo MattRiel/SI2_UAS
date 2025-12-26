@@ -6,15 +6,21 @@ use App\Models\Image as ImageModel;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
+use Illuminate\Support\Facades\Cache;
+
 class ImageService
 {
     public function getAllImages()
     {
-        return ImageModel::all();
+        return Cache::remember('all_images', 3600, function () {
+            return ImageModel::all();
+        });
     }
 
     public function uploadImage(UploadedFile $file, string $description)
     {
+        Cache::forget('all_images');
+        Cache::forget('dashboard_stats');
         $path = $file->store('gallery', 's3');
 
         return ImageModel::create([
@@ -27,6 +33,8 @@ class ImageService
 
     public function deleteImage(ImageModel $image)
     {
+        Cache::forget('all_images');
+        Cache::forget('dashboard_stats');
         Storage::disk('s3')->delete($image->filename);
         return $image->delete();
     }

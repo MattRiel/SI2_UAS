@@ -17,7 +17,7 @@ RUN apk add --no-cache \
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/install-php-extensions && \
-    install-php-extensions pcntl bcmath pdo_mysql zip intl gd
+    install-php-extensions pcntl bcmath pdo_mysql zip intl gd redis opcache
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
